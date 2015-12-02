@@ -24,9 +24,12 @@ struct SocketInputRange(T) {
 	@property Socket socket() {
 		return _socket;
 	}
-	/// ditto
-	alias socket this;	
 	private Socket _socket;
+	
+	/// Close socket
+	void close() {
+		_socket.close();
+	}
 	
 	private auto _empty = false;
 	/// Input range
@@ -94,9 +97,12 @@ struct SocketOutputRange {
 	@property Socket socket() {
 		return _socket;
 	}
-	/// ditto
-	alias socket this;
 	private Socket _socket;
+	
+	/// Close socket
+	void close() {
+		_socket.close();
+	}
 	
 	/// Output range
 	ptrdiff_t put(T)(T data) {
@@ -154,8 +160,10 @@ struct SocketRange(In, Out = In) {
 	}
 	private Socket _socket;
 	
-	/// ditto
-	alias socket this;
+	/// Close socket
+	void close() {
+		_socket.close();
+	}
 
 	/// Input range
 	@property auto inputRange() {
