@@ -11,7 +11,7 @@ void main() {
   auto pair = socketPair();
   
   /// Wrap as OutputRange
-  auto writer = SocketOutputRange(pair[0]);
+  auto writer = SocketOutputRange!char(pair[0]);
   
   /// Wrap as InputRange of char
   auto reader = SocketInputRange!char(pair[1]);
@@ -23,11 +23,12 @@ void main() {
 }
 ```
 
-### `struct SocketOutputRange`
-Wrap socket as OutputRange.
+### `struct SocketOutputRange(E)`
+Wrap socket as OutputRange of `E`.
+`E` can be `void` to put any types.
 
 ### `struct SocketInputRange(T)`
-Wrap socket as InputRange of T.
+Wrap socket as InputRange of `T`.
 
 ### `struct SocketRange(In, Out = In)`
 Wrap socket as Output/InputRange of In.
