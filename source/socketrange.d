@@ -132,16 +132,20 @@ struct SocketOutputRange(E = void) {
 
         static if (isSomeChar!E && !is(E == dchar)) {
             import std.utf;
-
-            /// Send encoded string
-            ptrdiff_t put(dchar c) {
-                E[4 / E.sizeof] buf;
-                auto len = encode(buf, c);
-                return put(buf[0 .. len]);
-            }
-            /// ditto
-            ptrdiff_t put(S)(S range) if (isInputRange!S && is(ElementType!S == dchar)) {
-                return put(range.byUTF!E);
+            
+            static if (is(typeof(byUTF!E(only(E.init))))) {
+                /// Send encoded string
+                ptrdiff_t put(dchar c) {
+                    E[4 / E.sizeof] buf;
+                    auto len = encode(buf, c);
+                    return put(buf[0 .. len]);
+                }
+                /// ditto
+                ptrdiff_t put(S)(S range) if (isInputRange!S && is(ElementType!S == dchar)) {
+                    return put(range.byUTF!E);
+                }
+            } else {
+                pragma(msg, "[WARNING]: std.utf.byUTF is required to use encoded string sender of SocketOutputRange");  
             }
         }
     }
@@ -171,22 +175,27 @@ unittest {
 }
 ///
 unittest {
-	auto pair = socketPair();
-	auto sender = pair[0];
-	auto receiver = pair[1];
-	
-	sender.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, dur!"seconds"(10));
-	receiver.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, dur!"seconds"(10));
-    
-	auto range = SocketOutputRange!wchar(sender);
-    
-    auto data = only("foo", "bar").join(" ");
-    static assert(is(ElementType!(typeof(data)) == dchar));
-    
-    range.put(data);
-    range.close();
-    
-	assert(SocketInputRange!wchar(receiver).array == "foo bar"w);
+    import std.utf;
+    static if (is(typeof(byUTF!char(""d)))) {
+        auto pair = socketPair();
+        auto sender = pair[0];
+        auto receiver = pair[1];
+
+        sender.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, dur!"seconds"(10));
+        receiver.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, dur!"seconds"(10));
+
+        auto range = SocketOutputRange!wchar(sender);
+
+        auto data = only("foo", "bar").join(" ");
+        static assert(is(ElementType!(typeof(data)) == dchar));
+
+        range.put(data);
+        range.close();
+
+        assert(SocketInputRange!wchar(receiver).array == "foo bar"w);
+    } else {
+        pragma(msg, "[WARNING]: std.utf.byUTF is required to use encoded string sender of SocketOutputRange");
+    }
 }
 
 /**
