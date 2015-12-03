@@ -1,4 +1,4 @@
-# socketrange
+# socketrange [![Build Status](https://travis-ci.org/ukatama/socketrange.svg)](https://travis-ci.org/ukatama/socketrange)
 Minimal range wrapper of socket for D.
 
 ## Usage
