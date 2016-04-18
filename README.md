@@ -1,4 +1,4 @@
-# socketrange [![Build Status](https://travis-ci.org/ukatama/socketrange.svg)](https://travis-ci.org/ukatama/socketrange)
+# socketrange [![Build Status](https://img.shields.io/travis/ukatama/socketrange/master.svg?style=flat-square)](https://travis-ci.org/ukatama/socketrange)
 Simple range wrapper of socket for D.
 
 ## Usage
