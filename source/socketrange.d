@@ -64,6 +64,8 @@ struct SocketInputRange(T) {
 }
 ///
 unittest {
+	import std.datetime : dur;
+
 	static assert(isInputRange!(SocketInputRange!ubyte));
 	static assert(is(ElementType!(SocketInputRange!char) == char));
 
@@ -152,6 +154,8 @@ struct SocketOutputRange(E = void) {
 }
 ///
 unittest {
+	import std.datetime : dur;
+
 	static assert(isOutputRange!(SocketOutputRange!void, int));
 	static assert(isOutputRange!(SocketOutputRange!char, char));
 	
@@ -175,7 +179,9 @@ unittest {
 }
 ///
 unittest {
+	import std.datetime : dur;
     import std.utf;
+
     static if (is(typeof(byUTF!char(""d)))) {
         auto pair = socketPair();
         auto sender = pair[0];
@@ -269,6 +275,7 @@ struct SocketRange(In, Out = In) {
 ///
 unittest {
 	import std.algorithm;
+	import std.datetime : dur;
 	
 	static assert(isInputRange!(SocketRange!char));
 	static assert(isOutputRange!(SocketRange!char, char));
