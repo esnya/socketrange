@@ -1,0 +1,7 @@
+{
+	"name": "socketrange",
+	"description": "Minimal range wrapper of socket",
+	"copyright": "Copyright © 2015, ukatama",
+	"authors": ["ukatama"],
+	"license": "MIT"
+}
